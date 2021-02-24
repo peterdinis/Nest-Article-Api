@@ -1,3 +1,22 @@
+import * as mongoose from 'mongoose';
+
+export const ArticleSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true
+    },
+
+    description: {
+        type: String,
+        required: true
+    },
+
+    author: {
+        type: String,
+        required: true 
+    }
+});
+
 export class Article {
     // define logic for article
 
