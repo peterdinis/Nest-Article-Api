@@ -17,19 +17,11 @@ export const ArticleSchema = new mongoose.Schema({
     }
 });
 
-export class Article {
+export interface Article extends mongoose.Document {
     // define logic for article
+     id: string;
+     author: string;
+     description: string;
+     title: string;
 
-    id: string
-    author: string
-    description: string
-    title: string
-
-
-    constructor(id: string, author: string, description: string, title: string) {
-        this.id = id;
-        this.author = author;
-        this.description = description;
-        this.title = title;
-    }
 }   

@@ -1,34 +1,61 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete} from '@nestjs/common';
-import {ArticlesService} from './articles.service';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Patch,
+  Delete,
+} from '@nestjs/common';
+import { ArticlesService } from './articles.service';
 
 @Controller('articles')
 export class ArticlesController {
-    constructor(private readonly articlesService: ArticlesService) {}
-    // add articles
-    @Post()
-    addArticle(@Body('author') articleAuthor: string, @Body('description') articleDescription: string, @Body('title') articleTitle: string): any {
-        // store article
-        return this.articlesService.createNewArticle(articleAuthor, articleDescription, articleTitle);
-    }
+  constructor(private readonly articlesService: ArticlesService) {}
 
-    @Get()
-    allArticles() {
-        return this.articlesService.loadArticles();
-    }
+  @Get()
+  async allArticles() {
+    const articles = await this.articlesService.loadArticles();
+    return articles;
+  }
 
-    @Get(":id")
-    singleArticle(@Param('id') articleId: string) {
-        return this.articlesService.oneArticle(articleId);
-    }
+  @Post()
+  async addArticle(
+    @Body('title') articleTitle: string,
+    @Body('description') articleDescription: string,
+    @Body('author') articleAuthor: string,
+  ) {
+    const newArticle = await this.articlesService.createNewArticle(
+      articleAuthor,
+      articleDescription,
+      articleTitle,
+    );
+    return newArticle;
+  }
 
-    @Patch(":id")
-    updateArticle(@Param('id') articleId: string, @Body('author') articleAuthor: string, @Body('description') articleDescription: string, @Body('title') articleTitle: string) {
-        return this.articlesService.updateArticle(articleId)
-    }
+  @Get(':id')
+  singleArticle(@Param('id') articleId: string) {
+    return this.articlesService.oneArticle(articleId);
+  }
 
-    @Delete(:id)
+  @Patch(':id')
+  async updateArticle(
+    @Param('id') articleId: string,
+    @Body('title') articleTitle: string,
+    @Body('description') articleDescription: string,
+    @Body('author') articleAuthor: string,
+  ) {
+    await this.articlesService.updateArticle(
+      articleId,
+      articleTitle,
+      articleDescription,
+      articleAuthor,
+    );
+  }
 
-    deleteArticle(@Param('id') articleId: string) {
-        return this.articlesService.deleteArticle();
-    }
+  @Delete(':id')
+  async deleteArticle(@Param('id') articleId: string) {
+    return this.articlesService.deleteArticle(articleId);
+    return null; // kedže mažeme article nechceme nič vrátiť
+  }
 }
