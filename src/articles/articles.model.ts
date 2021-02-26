@@ -18,7 +18,6 @@ export const ArticleSchema = new mongoose.Schema({
 });
 
 export interface Article extends mongoose.Document {
-    // define logic for article
      id: string;
      author: string;
      description: string;

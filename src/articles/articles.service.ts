@@ -1,20 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Article } from './articles.model';
+import {Injectable, NotFoundException} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model} from 'mongoose';
+import {Article} from './articles.model';
 
 @Injectable()
 export class ArticlesService {
   // edit model to constructor
-  constructor(
-    @InjectModel('Article') private readonly articleModel: Model<Article>,
-  ) {}
+  constructor(@InjectModel('Article') private readonly articleModel: Model<Article>) {}
 
   async createNewArticle(title: string, author: string, description: string) {
     const newArticle = new this.articleModel({
-      title,
+      title, 
       description,
-      author,
+      author
     });
 
     const result = await newArticle.save();
@@ -22,13 +20,8 @@ export class ArticlesService {
   }
 
   async loadArticles() {
-    const articles = await this.articleModel.find().exec();
-    return articles.map((article) => ({
-      id: article.id,
-      title: article.title,
-      description: article.description,
-      author: article.author,
-    }));
+    const allArticles = await this.articleModel.find({});
+    return allArticles;
   }
 
   async oneArticle(articleId: string) {
@@ -38,26 +31,22 @@ export class ArticlesService {
       title: article.title,
       description: article.description,
       author: article.author,
-    };
+    }
+
   }
 
-  async updateArticle(
-    articleId: string,
-    title: string,
-    description: string,
-    author: string,
-  ) {
+  async updateArticle(articleId: string, title: string, description: string, author: string) {
     const updateArticle = await this.findArticle(articleId);
 
-    if (title) {
+    if(title) {
       updateArticle.title = title;
     }
 
-    if (description) {
+    if(description) {
       updateArticle.description = description;
     }
 
-    if (author) {
+    if(author) {
       updateArticle.author = author;
     }
 
@@ -65,9 +54,9 @@ export class ArticlesService {
   }
 
   async deleteArticle(articleId: string) {
-    const result = await this.articleModel.deleteOne({ _id: articleId }).exec();
-    if (result.n === 0) {
-      throw new NotFoundException('Could not find article');
+    const result = await this.articleModel.deleteOne({_id: articleId}).exec();
+    if(result.n === 0) {
+      throw new NotFoundException('Could not find article')
     }
   }
 
@@ -75,15 +64,13 @@ export class ArticlesService {
     let article;
 
     try {
-      article = await (
-        await this.articleModel.findById(articleId)
-      ).execPopulate();
-    } catch (err) {
-      throw new NotFoundException('Could not find article');
+      article = await (await this.articleModel.findById(articleId)).execPopulate();
+    } catch(err) {
+      throw new NotFoundException('Could not find article')
     }
 
-    if (!article) {
-      throw new NotFoundException('Could not find article');
+    if(!article) {
+      throw new NotFoundException('Could not find article')
     }
 
     return article;
