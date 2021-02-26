@@ -65,6 +65,5 @@ export class ArticlesController {
   @Delete(':id')
   async deleteArticle(@Param('id') articleId: string) {
     return this.articlesService.deleteArticle(articleId);
-    return null; // kedže mažeme article nechceme nič vrátiť
   }
 }
